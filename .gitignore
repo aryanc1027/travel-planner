@@ -6,7 +6,8 @@ node_modules/
 
 # Firebase
 .firebase/
-
+configs/FirebaseConfig.js
+configs
 
 # Expo
 .expo/

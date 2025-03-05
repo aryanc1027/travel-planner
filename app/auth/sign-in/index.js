@@ -26,7 +26,6 @@ export default function SignIn() {
   }, []); // empty array to run only once
 
   const OnSignIn = () => {
-
     if(!email || !password) {
       Alert.alert('Please fill all the fields');
       return;
@@ -36,8 +35,9 @@ export default function SignIn() {
         // Signed in
         const user = userCredential.user;
         console.log("Signed in", user);
-
-        // navigate to home screen
+        
+        // Navigate to home screen
+        router.replace('/tabs/mytrip');
       })
       .catch(error => {
         const errorCode = error.code;
@@ -46,8 +46,6 @@ export default function SignIn() {
         if(errorCode === 'auth/invalid-credential') {
           Alert.alert('Incorrect email or password');
         }
-
-
       });
   };
 

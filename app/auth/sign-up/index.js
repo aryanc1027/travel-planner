@@ -1,10 +1,20 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+  Image,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-
-
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../configs/FirebaseConfig';
+import { Alert } from 'react-native';
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -20,6 +30,38 @@ export default function SignUp() {
     });
   }, []);
 
+  const OnCreateAccount = () => {
+    if (!email || !password || !firstName || !lastName) {
+      Alert.alert('Please fill all the fields');
+      return;
+    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        // Signed up
+        const user = userCredential.user;
+        console.log(user);
+        // navigate to home screen
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        let errorMessage = error.message;
+
+        if (errorMessage.includes(') ')) {
+          errorMessage = errorMessage.split(') ')[1];
+        }
+
+        if (errorCode === 'auth/weak-password') {
+          errorMessage = 'Password should be at least 6 characters';
+        } else if (errorCode === 'auth/email-already-in-use') {
+          errorMessage = 'This email is already registered';
+        } else if (errorCode === 'auth/invalid-email') {
+          errorMessage = 'Please enter a valid email address';
+        }
+
+        Alert.alert(errorMessage);
+      });
+  };
+
   return (
     <View
       style={{
@@ -30,50 +72,50 @@ export default function SignUp() {
         justifyContent: 'center',
       }}
     >
-         <Image
+      <Image
         source={require('../../../assets/images/plane.png')}
         style={{
           width: '100%',
           height: '100%',
           position: 'absolute',
-          opacity: 0.1, // Adjust opacity as needed
+          opacity: 0.1,
           resizeMode: 'contain',
         }}
       />
       <StatusBar barStyle="dark-content" />
-      
+
       <Text style={styles.headerText}>Create New Account</Text>
 
       <View style={styles.formContainer}>
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontFamily: 'outfit-medium' }}>First Name</Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Enter your first name" 
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your first name"
             value={firstName}
-            onChangeText={setFirstName}
+            onChangeText={value => setFirstName(value)}
           />
         </View>
 
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontFamily: 'outfit-medium' }}>Last Name</Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Enter your last name" 
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your last name"
             value={lastName}
-            onChangeText={setLastName}
+            onChangeText={value => setLastName(value)}
           />
         </View>
 
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontFamily: 'outfit-medium' }}>Email</Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Enter your email" 
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your email"
             keyboardType="email-address"
             autoCapitalize="none"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={value => setEmail(value)}
           />
         </View>
 
@@ -85,21 +127,23 @@ export default function SignUp() {
               style={styles.passwordInput}
               placeholder="Enter your password"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={value => setPassword(value)}
             />
-            <TouchableOpacity 
-              onPress={() => setShowPassword(!showPassword)} 
-              style={styles.eyeIcon}>
-              <Ionicons 
-                name={showPassword ? "eye-off" : "eye"} 
-                size={22} 
-                color={Colors.darkGrey} 
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={22}
+                color={Colors.darkGrey}
               />
             </TouchableOpacity>
           </View>
         </View>
 
         <TouchableOpacity
+          onPress={OnCreateAccount}
           style={{
             padding: 15,
             backgroundColor: Colors.black,
@@ -129,7 +173,9 @@ export default function SignUp() {
 
         <View style={styles.loginLinkContainer}>
           <Text style={styles.loginLinkText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('auth/sign-in/index')}
+          >
             <Text style={styles.loginLink}>Login</Text>
           </TouchableOpacity>
         </View>
@@ -202,5 +248,5 @@ const styles = StyleSheet.create({
   loginLink: {
     fontFamily: 'outfit-medium',
     color: Colors.black,
-  }
+  },
 });

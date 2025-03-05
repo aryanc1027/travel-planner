@@ -6,17 +6,50 @@ import { TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../configs/FirebaseConfig';
+import { Alert } from 'react-native';
+
+
 
 export default function SignIn() {
   const navigation = useNavigation();
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []); // empty array to run only once
+
+  const OnSignIn = () => {
+
+    if(!email || !password) {
+      Alert.alert('Please fill all the fields');
+      return;
+    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("Signed in", user);
+
+        // navigate to home screen
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      
+        if(errorCode === 'auth/invalid-credential') {
+          Alert.alert('Incorrect email or password');
+        }
+
+
+      });
+  };
 
   return (
     <View
@@ -37,7 +70,7 @@ export default function SignIn() {
           resizeMode: 'contain',
         }}
       />
-      
+
       <View
         style={{
           padding: 25,
@@ -72,7 +105,12 @@ export default function SignIn() {
 
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontFamily: 'outfit-medium' }}>Email</Text>
-          <TextInput style={styles.input} placeholder="Enter your email" />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your email"
+            value={email}
+            onChangeText={(value) => setEmail(value)}
+          />
         </View>
 
         <View style={{ marginTop: 20 }}>
@@ -82,21 +120,24 @@ export default function SignIn() {
               secureTextEntry={!passwordVisible}
               style={[styles.input, { flex: 1 }]}
               placeholder="Enter your password"
+              value={password}
+              onChangeText={(value) => setPassword(value)}
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
               style={{ position: 'absolute', right: 15 }}
             >
-              <Ionicons 
-                name={passwordVisible ? "eye-off" : "eye"} 
-                size={22} 
-                color={Colors.darkGrey} 
+              <Ionicons
+                name={passwordVisible ? 'eye-off' : 'eye'}
+                size={22}
+                color={Colors.darkGrey}
               />
             </TouchableOpacity>
           </View>
         </View>
 
         <TouchableOpacity
+          onPress={OnSignIn}
           style={{
             padding: 15,
             backgroundColor: Colors.black,

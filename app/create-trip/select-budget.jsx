@@ -1,11 +1,11 @@
 import { View, Text, FlatList } from 'react-native'
 import React, { useEffect, useContext } from 'react'
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { SelectBudgetOptions } from '@/constants/Options';
 import OptionCard from '@/components/CreateTrip/OptionCard';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { CreateTripContext } from '@/context/createTripContext';
+import { CreateTripContext } from '../../context/createTripContext';
 import { Alert } from 'react-native';
 import { Image } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -15,6 +15,7 @@ export default function SelectBudget() {
     const navigation = useNavigation();
     const [selectedOption, setSelectedOption] = useState();
     const {tripData, setTripData} = useContext(CreateTripContext);
+    const router = useRouter();
 
     useEffect(() => {
         navigation.setOptions({
@@ -36,7 +37,7 @@ export default function SelectBudget() {
             Alert.alert('Please select a budget');
             return;
         }
-       router.push('');
+       router.push('/create-trip/review-trip');
     }
 
     
@@ -84,8 +85,8 @@ export default function SelectBudget() {
             onPress={handleContinue}
             style={{
                 width: '100%',
-                padding: 16,
-                backgroundColor: Colors.black,
+                padding: 18,
+                backgroundColor: '#4B9CD3',
                 borderRadius: 15,
                 shadowColor: '#000',
                 shadowOffset: {
@@ -95,6 +96,7 @@ export default function SelectBudget() {
                 shadowOpacity: 0.2,
                 shadowRadius: 8,
                 elevation: 4,
+                marginBottom: 50,
             }}>
             <Text style={{
                 color: Colors.white,

@@ -33,6 +33,7 @@ export default function SelectTraveler() {
       Alert.alert('Please select your travelers');
       return;
     }
+    setTripData({...tripData, traveler: selectedOption.title})
     router.push('/create-trip/select-dates');
   }
 

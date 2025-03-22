@@ -81,6 +81,7 @@ export default function SearchPlace() {
         url: 'https://www.wikidata.org/wiki/' + place.properties.wikidata,
         imageUrl: imageUrl,
         imageAttribution: attribution,
+        
       },
     });
 

@@ -1,5 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
-import React, { useEffect, useRef } from 'react'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from 'react-native';
+import React, { useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,7 +13,7 @@ import { useRouter } from 'expo-router';
 export default function StartNewTripCard() {
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const router = useRouter();
-  
+
   useEffect(() => {
     Animated.spring(scaleAnim, {
       toValue: 1,
@@ -18,7 +24,9 @@ export default function StartNewTripCard() {
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
+    <Animated.View
+      style={[styles.container, { transform: [{ scale: scaleAnim }] }]}
+    >
       <View style={styles.iconContainer}>
         <LinearGradient
           colors={['#4B9CD3', '#7BAFD4']}
@@ -27,14 +35,14 @@ export default function StartNewTripCard() {
           <Ionicons name="airplane" size={35} color="white" />
         </LinearGradient>
       </View>
-      
+
       <Text style={styles.title}>No Trips Planned Yet</Text>
 
       <Text style={styles.subtitle}>
         Create your first adventure and start exploring!
       </Text>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         onPress={() => router.push('/create-trip/search-place')}
         style={styles.button}
         activeOpacity={0.8}
@@ -45,12 +53,17 @@ export default function StartNewTripCard() {
           end={{ x: 1, y: 0 }}
           style={styles.buttonGradient}
         >
-          <Ionicons name="add-circle-outline" size={20} color="white" style={styles.buttonIcon} />
+          <Ionicons
+            name="add-circle-outline"
+            size={20}
+            color="white"
+            style={styles.buttonIcon}
+          />
           <Text style={styles.buttonText}>Start a New Trip</Text>
         </LinearGradient>
       </TouchableOpacity>
     </Animated.View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -62,7 +75,7 @@ const styles = StyleSheet.create({
     gap: 20,
     backgroundColor: 'white',
     borderRadius: 25,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 10,
@@ -80,7 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: "#4B9CD3",
+    shadowColor: '#4B9CD3',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -105,7 +118,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     marginTop: 10,
-    shadowColor: "#4B9CD3",
+    shadowColor: '#4B9CD3',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -128,5 +141,5 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     marginRight: 8,
-  }
+  },
 });

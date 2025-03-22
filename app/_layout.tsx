@@ -10,12 +10,12 @@ export default function RootLayout() {
     'outfit-bold': require('../assets/fonts/Outfit-Bold.ttf'),
   });
 
-  const [tripData, setTripData] = useState([])
+  const [tripData, setTripData] = useState([]);
   return (
-    <CreateTripContext.Provider value={{tripData, setTripData}}>
+    <CreateTripContext.Provider value={{ tripData, setTripData }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name='tabs' options={{ headerShown: false }} />
+        <Stack.Screen name="tabs" options={{ headerShown: false }} />
       </Stack>
     </CreateTripContext.Provider>
   );

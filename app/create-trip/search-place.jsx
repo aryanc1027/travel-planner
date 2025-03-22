@@ -1,5 +1,13 @@
 import 'react-native-get-random-values';
-import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../constants/Colors';
@@ -9,15 +17,13 @@ import { CreateTripContext } from '../../context/createTripContext';
 import { getCityImageFromPlace } from './cityImage';
 import { useRouter } from 'expo-router';
 
-
 export default function SearchPlace() {
   const navigation = useNavigation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {tripData, setTripData} = useContext(CreateTripContext);
+  const { tripData, setTripData } = useContext(CreateTripContext);
   const router = useRouter();
-
 
   useEffect(() => {
     navigation.setOptions({
@@ -38,8 +44,7 @@ export default function SearchPlace() {
   //   console.log('tripData', tripData);
   // }, [tripData]);
 
-
-  const searchPlaces = async (text) => {
+  const searchPlaces = async text => {
     if (text.length > 1) {
       setLoading(true);
       try {
@@ -64,10 +69,9 @@ export default function SearchPlace() {
     }
   };
 
-  const handlePlaceSelect = async (place) => {
+  const handlePlaceSelect = async place => {
     setQuery(place.place_name);
-    setResults([]); 
-    
+    setResults([]);
 
     const { imageUrl, attribution } = await getCityImageFromPlace(place);
     setTripData({
@@ -76,13 +80,12 @@ export default function SearchPlace() {
         coordinates: place.geometry.coordinates,
         url: 'https://www.wikidata.org/wiki/' + place.properties.wikidata,
         imageUrl: imageUrl,
-        imageAttribution: attribution
-      }
+        imageAttribution: attribution,
+      },
     });
 
     router.push('/create-trip/select-traveler');
   };
-
 
   const clearSearch = () => {
     setQuery('');
@@ -92,13 +95,18 @@ export default function SearchPlace() {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <Ionicons
+          name="search"
+          size={20}
+          color="#999"
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Search for a city"
           placeholderTextColor="#999"
           value={query}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setQuery(text);
             searchPlaces(text);
           }}
@@ -109,22 +117,33 @@ export default function SearchPlace() {
           </TouchableOpacity>
         )}
       </View>
-      
+
       {loading ? (
-        <ActivityIndicator style={styles.loader} size="large" color={Colors.primary || '#0066CC'} />
+        <ActivityIndicator
+          style={styles.loader}
+          size="large"
+          color={Colors.primary || '#0066CC'}
+        />
       ) : (
         <FlatList
           data={results}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={styles.resultItem} 
+            <TouchableOpacity
+              style={styles.resultItem}
               onPress={() => handlePlaceSelect(item)}
             >
-              <Ionicons name="location" size={20} color="#666" style={styles.locationIcon} />
+              <Ionicons
+                name="location"
+                size={20}
+                color="#666"
+                style={styles.locationIcon}
+              />
               <View style={styles.resultTextContainer}>
                 <Text style={styles.resultText}>{item.text}</Text>
-                <Text style={styles.resultSubtext}>{item.place_name.replace(item.text + ', ', '')}</Text>
+                <Text style={styles.resultSubtext}>
+                  {item.place_name.replace(item.text + ', ', '')}
+                </Text>
               </View>
             </TouchableOpacity>
           )}

@@ -10,8 +10,6 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../configs/FirebaseConfig';
 import { Alert } from 'react-native';
 
-
-
 export default function SignIn() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -26,7 +24,7 @@ export default function SignIn() {
   }, []); // empty array to run only once
 
   const OnSignIn = () => {
-    if(!email || !password) {
+    if (!email || !password) {
       Alert.alert('Please fill all the fields');
       return;
     }
@@ -34,16 +32,16 @@ export default function SignIn() {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-        console.log("Signed in", user);
-        
+        console.log('Signed in', user);
+
         // Navigate to home screen
         router.replace('/tabs/mytrip');
       })
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
-      
-        if(errorCode === 'auth/invalid-credential') {
+
+        if (errorCode === 'auth/invalid-credential') {
           Alert.alert('Incorrect email or password');
         }
       });
@@ -107,7 +105,7 @@ export default function SignIn() {
             style={styles.input}
             placeholder="Enter your email"
             value={email}
-            onChangeText={(value) => setEmail(value)}
+            onChangeText={value => setEmail(value)}
           />
         </View>
 
@@ -119,7 +117,7 @@ export default function SignIn() {
               style={[styles.input, { flex: 1 }]}
               placeholder="Enter your password"
               value={password}
-              onChangeText={(value) => setPassword(value)}
+              onChangeText={value => setPassword(value)}
             />
             <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}

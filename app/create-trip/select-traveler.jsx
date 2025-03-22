@@ -1,16 +1,18 @@
 import { View, Text, FlatList } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { SelectTravelerOptions } from '@/constants/Options';
 import OptionCard from '@/components/CreateTrip/OptionCard';
 import { Colors } from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native';
 import { CreateTripContext } from '../../context/createTripContext';
-
+import { Alert } from 'react-native';
 export default function SelectTraveler() {
   const navigation = useNavigation();
+
   const [selectedOption, setSelectedOption] = useState();
   const {tripData, setTripData} = useContext(CreateTripContext);
+  const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({
@@ -25,6 +27,14 @@ export default function SelectTraveler() {
     setTripData({...tripData, traveler: selectedOption})
 
   }, [selectedOption]);
+
+  const handleContinue = () => {
+    if(!selectedOption) {
+      Alert.alert('Please select your travelers');
+      return;
+    }
+    router.push('/create-trip/select-dates');
+  }
 
 
   return (
@@ -57,18 +67,21 @@ export default function SelectTraveler() {
                 marginVertical: 10,
               }}
             >
-              <OptionCard option={item} selected={selectedOption} />
+              <OptionCard option={item} selectedOption={selectedOption} />
             </TouchableOpacity>
           )}
         
         />
       </View>
-      <TouchableOpacity style={{
+      
+      <TouchableOpacity 
+      onPress={handleContinue}
+      style={{
         padding: 20,
-        backgroundColor: '#007AFF',
+        backgroundColor: '#4B9CD3',
         borderRadius: 20,
         marginHorizontal: 5,
-        shadowColor: "#007AFF",
+        shadowColor: "#4B9CD3",
         shadowOffset: {
           width: 0,
           height: 6,

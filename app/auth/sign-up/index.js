@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../configs/FirebaseConfig';
 import { Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({

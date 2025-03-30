@@ -41,7 +41,7 @@ export const SelectBudgetOptions = [
   {
     id: 2,
     title: 'Mid-Range',
-    description: 'Comfortable travel that won\'t break the bank',
+    description: "Comfortable travel that won't break the bank",
     icon: () => <Ionicons name="card-outline" size={32} color="#4B9CD3" />,
   },
   {
@@ -51,3 +51,7 @@ export const SelectBudgetOptions = [
     icon: () => <Ionicons name="diamond-outline" size={32} color="#FFD700" />,
   },
 ];
+
+export const AI_Prompt =
+  'Generate Travel Plan for Location: {location}, for {totalDays} Days and {totalNights} Nights for a {traveler} with {budget} budget with flight details, Flight Price with Booking URL, Hotels options list with HotelName, Hotel Address, Price, hotel image url, geo coordinates, rating, description, and Places to visit nearby with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, Timing to travel each of the locations for {totalDays} day and {totalNights} night with each day plan with best time to visit in JSON format';
+

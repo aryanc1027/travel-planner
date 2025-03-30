@@ -73,18 +73,30 @@ export default function SearchPlace() {
     setQuery(place.place_name);
     setResults([]);
 
-    const { imageUrl, attribution } = await getCityImageFromPlace(place);
+    // Set initial trip data without the image
     setTripData({
       locationInfo: {
         name: place.place_name,
         coordinates: place.geometry.coordinates,
         url: 'https://www.wikidata.org/wiki/' + place.properties.wikidata,
-        imageUrl: imageUrl,
-        imageAttribution: attribution,
-        
+        imageUrl: '', // Will be updated when image loads
+        imageAttribution: '', // Will be updated when image loads
       },
     });
 
+    // Fetch image in the background
+    getCityImageFromPlace(place).then(({ imageUrl, attribution }) => {
+      setTripData(prev => ({
+        ...prev,
+        locationInfo: {
+          ...prev.locationInfo,
+          imageUrl,
+          imageAttribution: attribution,
+        },
+      }));
+    });
+
+    // Navigate immediately without waiting for the image
     router.push('/create-trip/select-traveler');
   };
 

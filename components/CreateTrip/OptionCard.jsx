@@ -12,9 +12,11 @@ export default function OptionCard({ option, selectedOption }) {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          backgroundColor: selectedOption?.id === option.id ? '#f0f8ff' : '#ffffff',
+          backgroundColor:
+            selectedOption?.id === option.id ? '#f0f8ff' : '#ffffff',
           borderWidth: 3,
-          borderColor: selectedOption?.id === option.id ? '#007AFF' : 'transparent',
+          borderColor:
+            selectedOption?.id === option.id ? '#007AFF' : 'transparent',
           borderRadius: 20,
           alignItems: 'center',
           shadowColor: '#000',

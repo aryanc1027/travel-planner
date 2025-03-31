@@ -1,16 +1,43 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import { Colors } from '../../constants/Colors';
 import StartNewTripCard from '../../components/MyTrips/StartNewTripCard';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db, auth } from '../../configs/FirebaseConfig';
+import { ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import UserTripList from '../../components/MyTrips/UserTripList';
+import { useRouter } from 'expo-router';
 
 export default function MyTrip() {
   const [userTrips, setUserTrips] = useState([]);
+  const user = auth.currentUser;
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() =>{
+    user && GetMyTrips();
+  }, [user]);
+
+  const GetMyTrips = async () => {
+    setLoading(true);
+    setUserTrips([]);
+    const q = query(
+      collection(db, "UserTrips"), 
+      where("userId", "==", user.uid),
+      where("userEmail", "==", user.email)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+      setUserTrips(prev => [...prev, doc.data()]);
+    });
+    setLoading(false);
+  }
 
   return (
-    <View
+    <ScrollView
       style={{
         padding: 25,
         paddingTop: 55,
@@ -34,10 +61,13 @@ export default function MyTrip() {
         >
           My Trips
         </Text>
-        <Ionicons name="add" size={40} color="black" />
+        <TouchableOpacity onPress={() => router.push('/create-trip/search-place')}>
+          <Ionicons name="add" size={40} color="black" />
+        </TouchableOpacity>
       </View>
-
-      {userTrips.length == 0 ? <StartNewTripCard /> : null}
-    </View>
+      {loading ? <ActivityIndicator size="large" color={Colors.primary} /> : 
+        userTrips.length == 0 ? <StartNewTripCard /> : <UserTripList userTrips={userTrips}/>
+      }
+    </ScrollView>
   );
 }

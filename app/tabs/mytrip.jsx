@@ -65,7 +65,16 @@ export default function MyTrip() {
           <Ionicons name="add" size={40} color="black" />
         </TouchableOpacity>
       </View>
-      {loading ? <ActivityIndicator size="large" color={Colors.primary} /> : 
+      {loading ? (
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: 400 // This ensures there's enough space for centering
+        }}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+        </View>
+      ) : 
         userTrips.length == 0 ? <StartNewTripCard /> : <UserTripList userTrips={userTrips}/>
       }
     </ScrollView>

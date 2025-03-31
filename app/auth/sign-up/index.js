@@ -12,10 +12,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../../configs/FirebaseConfig';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -40,8 +41,11 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(userCredential => {
         const user = userCredential.user;
-
-        router.replace('/tabs/mytrip');
+        return updateProfile(user, {
+          displayName: `${firstName} ${lastName}`
+        }).then(() => {
+          router.replace('/tabs/mytrip');
+        });
       })
       .catch(error => {
         const errorCode = error.code;
@@ -73,16 +77,7 @@ export default function SignUp() {
         justifyContent: 'center',
       }}
     >
-      <Image
-        source={require('../../../assets/images/plane.png')}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          opacity: 0.1,
-          resizeMode: 'contain',
-        }}
-      />
+   
       <StatusBar barStyle="dark-content" />
 
       <Text style={styles.headerText}>Create New Account</Text>

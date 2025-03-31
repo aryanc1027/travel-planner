@@ -55,17 +55,7 @@ export default function SignIn() {
         position: 'relative',
       }}
     >
-      {/* Background Image */}
-      <Image
-        source={require('../../../assets/images/plane.png')}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          opacity: 0.1, // Adjust opacity as needed
-          resizeMode: 'contain',
-        }}
-      />
+    
 
       <View
         style={{

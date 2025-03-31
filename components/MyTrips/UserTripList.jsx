@@ -3,13 +3,21 @@ import React, { useMemo } from 'react'
 import moment from 'moment'
 import { Colors } from '../../constants/Colors'
 import UserTripCard from './UserTripCard'
+import { useRouter } from 'expo-router';
 export default function UserTripList({userTrips}) {
     const LatestTrip = userTrips[0]?.tripPlan
+    const router = useRouter();
 
     const imageUrl = useMemo(() => {
       if (!userTrips[0]?.tripData) return null;
       const logData = JSON.parse(userTrips[0].tripData);
       return logData.locationInfo.imageUrl;
+    }, [userTrips[0]?.tripData]);
+
+    const getStartDate = useMemo(() => {
+      if (!userTrips[0]?.tripData) return null;
+      const logData = JSON.parse(userTrips[0].tripData);
+      return logData.startDate;
     }, [userTrips[0]?.tripData]);
 
     return userTrips && (
@@ -55,7 +63,7 @@ export default function UserTripList({userTrips}) {
                 fontSize: 15,
                 color: Colors.grey,
             }}>
-                {moment(LatestTrip.startDate).format('DD MMMM YYYY')}
+                {moment(getStartDate).format('DD MMMM YYYY')}
             </Text>
             <Text style={{
                 fontFamily: 'outfit',
@@ -72,7 +80,14 @@ export default function UserTripList({userTrips}) {
                 })()}
             </Text>
           </View>
-          <TouchableOpacity style={{
+          <TouchableOpacity 
+            onPress={() => router.push({
+              pathname: '/trip-details',
+              params: {
+                tripData: JSON.stringify(userTrips[0])
+              }
+            })}
+            style={{
               backgroundColor: Colors.primary,
               padding: 12,
               borderRadius: 12,

@@ -4,10 +4,15 @@ import moment from 'moment'
 import { Colors } from '../../constants/Colors'
 
 export default function UserTripCard({trip}) {
+   // Parse JSON once at component level
+   const logData = JSON.parse(trip.tripData);
+   
    const getImageUrl = () => {
-    const logData = JSON.parse(trip.tripData);
-    const imageUrl = logData.locationInfo.imageUrl;
-    return imageUrl;
+     return logData.locationInfo.imageUrl;
+   }
+
+   const getStartDate = () => {
+     return logData.startDate;
    }
     
   return (
@@ -53,7 +58,7 @@ export default function UserTripCard({trip}) {
             color: Colors.grey,
             marginBottom: 4,
         }}>
-          {moment(trip.tripPlan.startDate).format('DD MMMM YYYY')}
+          {moment(getStartDate()).format('DD MMMM YYYY')}
         </Text>
         
         

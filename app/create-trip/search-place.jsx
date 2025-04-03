@@ -97,7 +97,7 @@ export default function SearchPlace() {
     });
 
     // Navigate immediately without waiting for the image
-    router.push('/create-trip/select-traveler');
+    router.push('/create-trip/select-departure-airport');
   };
 
   const clearSearch = () => {

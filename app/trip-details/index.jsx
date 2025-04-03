@@ -1,10 +1,12 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { useLocalSearchParams } from 'expo-router';
 import { Colors } from '../../constants/Colors';
 import moment from 'moment';
 import FlightInfo from '../../components/TripDetails/FlightInfo';
+import HotelList from '../../components/TripDetails/HotelList';
+import ItineraryList from '../../components/TripDetails/ItineraryList';
 export default function TripDetails() {
     const navigation = useNavigation();
     const {tripData} = useLocalSearchParams();
@@ -25,18 +27,35 @@ export default function TripDetails() {
         navigation.setOptions({
             headerShown: true,
             headerTransparent: true,
-            headerTitle: ''
+            headerTitle: '',
+            headerStyle: {
+                backgroundColor: 'transparent',
+            },
+            headerBackground: () => null,
         });
         setTripDetails(parsedTripData);
     }, [])
 
     return tripDetails && (
-        <View>
+        <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 40 }}
+            scrollEventThrottle={16}
+            onScroll={({ nativeEvent }) => {
+                if (nativeEvent.contentOffset.y > 100) {
+                    navigation.setOptions({ headerShown: false });
+                } else {
+                    navigation.setOptions({ 
+                        headerShown: true,
+                        headerTransparent: true 
+                    });
+                }
+            }}
+        >
             <Image source={{uri: imageUrl}} style={{width: '100%', height: 300}}/>
             <View style={{
                 padding: 15,
                 backgroundColor: Colors.white,
-                height: '100%',
                 marginTop: -30,
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
@@ -87,13 +106,15 @@ export default function TripDetails() {
             <FlightInfo flightData={parsedTripData?.tripPlan?.flights} />
 
             {/* Hotel List  */}
+            <HotelList hotelData={parsedTripData?.tripPlan?.hotels} />
 
             {/* Day plan */}
+            <ItineraryList itineraryData={parsedTripData?.tripPlan?.itinerary}/>
             </View>
 
             
 
 
-        </View>
+        </ScrollView>
     )
 }

@@ -34,6 +34,8 @@ export default function GenerateTrip() {
       .replace('{totalNights}', tripData?.totalDays - 1)
       .replace('{traveler}', tripData?.traveler)
       .replace('{budget}', tripData?.budget)
+      .replace('{departureAirport}', tripData?.departureAirport?.name || '')
+      .replace('{departureIATA}', tripData?.departureAirport?.iata || '')
       .replace('{totalDays}', tripData?.totalDays)
       .replace('{totalNights}', tripData?.totalDays - 1);
     //console.log(FinalPrompt);
@@ -104,6 +106,7 @@ export default function GenerateTrip() {
           height: 250,
           resizeMode: 'contain',
           backgroundColor: '#ffffff',
+          alignSelf: 'center',
         }}
       />
     </View>

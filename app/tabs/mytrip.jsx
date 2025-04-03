@@ -29,10 +29,14 @@ export default function MyTrip() {
       where("userEmail", "==", user.email)
     );
     const querySnapshot = await getDocs(q);
+    let trips = [];
     querySnapshot.forEach((doc) => {
-      //console.log(doc.id, " => ", doc.data());
-      setUserTrips(prev => [...prev, doc.data()]);
+      trips.push(doc.data());
     });
+    // Sort trips by creation time (newest first)
+    // Assuming there's a createdAt field in your trip data
+    trips.sort((a, b) => b.createdAt - a.createdAt);
+    setUserTrips(trips);
     setLoading(false);
   }
 

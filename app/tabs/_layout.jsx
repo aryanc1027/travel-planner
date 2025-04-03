@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
 
@@ -8,7 +7,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs screenOptions={{ 
+      headerShown: false,
+      tabBarStyle: { backgroundColor: '#ffffff' }
+    }}>
       <Tabs.Screen
         name="mytrip"
         options={{

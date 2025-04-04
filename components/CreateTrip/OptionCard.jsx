@@ -1,7 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function OptionCard({ option, selectedOption }) {
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
+
   return (
     <View
       style={[
@@ -13,13 +18,17 @@ export default function OptionCard({ option, selectedOption }) {
           flexDirection: 'row',
           justifyContent: 'space-between',
           backgroundColor:
-            selectedOption?.id === option.id ? '#f0f8ff' : '#ffffff',
-          borderWidth: 3,
+            selectedOption?.id === option.id 
+              ? colors.primary 
+              : isDarkMode ? colors.backgroundLight : colors.background,
+          borderWidth: 1,
           borderColor:
-            selectedOption?.id === option.id ? '#007AFF' : 'transparent',
+            selectedOption?.id === option.id 
+              ? colors.primary 
+              : isDarkMode ? colors.primary + '30' : colors.lightGrey,
           borderRadius: 20,
           alignItems: 'center',
-          shadowColor: '#000',
+          shadowColor: colors.shadow,
           shadowOffset: {
             width: 0,
             height: 6,
@@ -37,7 +46,7 @@ export default function OptionCard({ option, selectedOption }) {
             fontSize: 24,
             fontFamily: 'outfit-bold',
             marginBottom: 8,
-            color: '#000000',
+            color: selectedOption?.id === option.id ? colors.white : colors.textDark,
           }}
         >
           {option?.title}
@@ -47,7 +56,7 @@ export default function OptionCard({ option, selectedOption }) {
           style={{
             fontSize: 16,
             fontFamily: 'outfit-regular',
-            color: '#5d6d6e',
+            color: selectedOption?.id === option.id ? colors.white : colors.textMuted,
             lineHeight: 22,
           }}
         >

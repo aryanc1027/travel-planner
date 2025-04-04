@@ -8,9 +8,13 @@ import { TouchableOpacity } from 'react-native';
 import { CreateTripContext } from '../../context/createTripContext';
 import { Alert } from 'react-native';
 import { Platform } from 'react-native';
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function SelectTraveler() {
   const navigation = useNavigation();
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
 
   const [selectedOption, setSelectedOption] = useState();
   const { tripData, setTripData } = useContext(CreateTripContext);
@@ -43,7 +47,7 @@ export default function SelectTraveler() {
         flex: 1,
         paddingHorizontal: '5%',
         paddingTop: '12%',
-        backgroundColor: Colors.white,
+        backgroundColor: colors.background,
       }}
     >
       <View
@@ -57,7 +61,7 @@ export default function SelectTraveler() {
           style={{
             fontFamily: 'outfit-bold',
             fontSize: Platform.OS === 'ios' ? 23 : 21,
-            color: Colors.black,
+            color: colors.textDark,
             marginBottom: '4%',
             marginTop: '10%',
             textAlign: 'center',
@@ -88,10 +92,10 @@ export default function SelectTraveler() {
         onPress={handleContinue}
         style={{
           padding: '5%',
-          backgroundColor: '#4B9CD3',
+          backgroundColor: colors.primary,
           borderRadius: 20,
           marginHorizontal: '1%',
-          shadowColor: '#4B9CD3',
+          shadowColor: colors.primary,
           shadowOffset: {
             width: 0,
             height: 6,
@@ -105,7 +109,7 @@ export default function SelectTraveler() {
         <Text
           style={{
             textAlign: 'center',
-            color: '#ffffff',
+            color: colors.white,
             fontFamily: 'outfit-bold',
             fontSize: Platform.OS === 'ios' ? 20 : 18,
           }}

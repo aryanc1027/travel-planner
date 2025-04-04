@@ -6,12 +6,15 @@ import OptionCard from '@/components/CreateTrip/OptionCard';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CreateTripContext } from '../../context/createTripContext';
+import { useTheme } from '../../context/themeContext';
+import { Colors, lightColors, darkColors } from '@/constants/Colors';
 import { Alert } from 'react-native';
 import { Image } from 'react-native';
-import { Colors } from '@/constants/Colors';
 
 export default function SelectBudget() {
   const navigation = useNavigation();
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
   const [selectedOption, setSelectedOption] = useState();
   const { tripData, setTripData } = useContext(CreateTripContext);
   const router = useRouter();
@@ -21,8 +24,15 @@ export default function SelectBudget() {
       headerShown: true,
       headerTitle: '',
       headerTransparent: true,
+      headerTitleStyle: {
+        color: colors.textDark,
+      },
+      headerStyle: {
+        backgroundColor: isDarkMode ? colors.background + '80' : 'rgba(255, 255, 255, 0.8)',
+        borderBottomWidth: 0,
+      },
     });
-  }, []);
+  }, [isDarkMode]);
 
   useEffect(() => {
     selectedOption &&
@@ -44,7 +54,7 @@ export default function SelectBudget() {
     <View
       style={{
         flex: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: colors.background,
         padding: 25,
         paddingTop: 100,
       }}
@@ -55,6 +65,7 @@ export default function SelectBudget() {
           fontSize: 30,
           marginBottom: 20,
           textAlign: 'center',
+          color: colors.textDark,
         }}
       >
         Choose a Budget
@@ -64,7 +75,7 @@ export default function SelectBudget() {
         style={{
           fontFamily: 'outfit-regular',
           fontSize: 16,
-          color: Colors.darkGrey,
+          color: colors.textMuted,
           marginBottom: 30,
           textAlign: 'center',
           lineHeight: 22,
@@ -77,7 +88,10 @@ export default function SelectBudget() {
         data={SelectBudgetOptions}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => setSelectedOption(item)}>
-            <OptionCard option={item} selectedOption={selectedOption} />
+            <OptionCard 
+              option={item} 
+              selectedOption={selectedOption}
+            />
           </TouchableOpacity>
         )}
         style={{ marginBottom: 20 }}
@@ -88,9 +102,9 @@ export default function SelectBudget() {
         style={{
           width: '100%',
           padding: 18,
-          backgroundColor: '#4B9CD3',
+          backgroundColor: colors.primary,
           borderRadius: 15,
-          shadowColor: '#000',
+          shadowColor: colors.primary,
           shadowOffset: {
             width: 0,
             height: 5,
@@ -103,7 +117,7 @@ export default function SelectBudget() {
       >
         <Text
           style={{
-            color: Colors.white,
+            color: colors.white,
             fontFamily: 'outfit-medium',
             fontSize: 18,
             textAlign: 'center',

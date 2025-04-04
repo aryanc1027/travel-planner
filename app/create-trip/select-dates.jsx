@@ -4,12 +4,16 @@ import { useNavigation } from 'expo-router';
 import CalendarPicker from 'react-native-calendar-picker';
 import { CreateTripContext } from '../../context/createTripContext';
 import { TouchableOpacity } from 'react-native';
+import { useTheme } from '../../context/themeContext';
+import { Colors, lightColors, darkColors } from '../../constants/Colors';
 import moment from 'moment';
 import { useRouter } from 'expo-router';
 import { Alert } from 'react-native';
 
 export default function SelectDates() {
   const navigation = useNavigation();
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const { tripData, setTripData } = useContext(CreateTripContext);
@@ -20,8 +24,15 @@ export default function SelectDates() {
       headerShown: true,
       headerTitle: '',
       headerTransparent: true,
+      headerTitleStyle: {
+        color: colors.textDark,
+      },
+      headerStyle: {
+        backgroundColor: isDarkMode ? colors.background + '80' : 'rgba(255, 255, 255, 0.8)',
+        borderBottomWidth: 0,
+      },
     });
-  }, []);
+  }, [isDarkMode]);
 
   const onDateChange = (date, type) => {
     if (type === 'END_DATE') {
@@ -57,7 +68,7 @@ export default function SelectDates() {
       style={{
         padding: 20,
         paddingTop: 50,
-        backgroundColor: '#ffffff',
+        backgroundColor: colors.background,
         height: '100%',
       }}
     >
@@ -65,7 +76,7 @@ export default function SelectDates() {
         style={{
           fontFamily: 'outfit-bold',
           fontSize: 23,
-          color: '#000000',
+          color: colors.textDark,
           marginBottom: 15,
           marginTop: 40,
           textAlign: 'center',
@@ -85,11 +96,25 @@ export default function SelectDates() {
           onDateChange={onDateChange}
           allowRangeSelection={true}
           minDate={new Date()}
-          maxDate={
-            new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-          }
-          selectedDayColor="#4B9CD3"
-          selectedDayTextColor="#ffffff"
+          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+          selectedDayColor={colors.primary}
+          selectedDayTextColor={colors.white}
+          textStyle={{ color: colors.textDark }}
+          todayBackgroundColor={isDarkMode ? colors.backgroundLight : '#f3f3f3'}
+          todayTextStyle={{ color: colors.textDark }}
+          monthTitleStyle={{ color: colors.textDark }}
+          yearTitleStyle={{ color: colors.textDark }}
+          previousTitleStyle={{ color: colors.primary }}
+          nextTitleStyle={{ color: colors.primary }}
+          dayLabelsWrapper={{
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+          }}
+          customDatesStyles={[
+            {
+              textStyle: { color: colors.textDark },
+            },
+          ]}
           startDate={selectedStartDate}
           endDate={selectedEndDate}
           width={350}
@@ -100,10 +125,10 @@ export default function SelectDates() {
         onPress={handleContinue}
         style={{
           padding: 15,
-          backgroundColor: '#4B9CD3',
+          backgroundColor: colors.primary,
           borderRadius: 15,
           marginHorizontal: 20,
-          shadowColor: '#4B9CD3',
+          shadowColor: colors.primary,
           shadowOffset: {
             width: 0,
             height: 6,
@@ -118,7 +143,7 @@ export default function SelectDates() {
         <Text
           style={{
             textAlign: 'center',
-            color: '#ffffff',
+            color: colors.white,
             fontFamily: 'outfit-bold',
             fontSize: 18,
           }}

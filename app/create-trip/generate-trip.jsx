@@ -6,6 +6,8 @@ import { AI_Prompt } from './../../constants/Options';
 import { chatSession } from '../../configs/AiModel';
 import { doc, setDoc } from "firebase/firestore"; 
 import { auth, db } from '../../configs/FirebaseConfig';
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function GenerateTrip() {
   const navigation = useNavigation();
@@ -15,6 +17,23 @@ export default function GenerateTrip() {
   const router = useRouter();
   const user = auth.currentUser;
   const [hasGenerated, setHasGenerated] = useState(false);
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTitle: '',
+      headerTransparent: true,
+      headerTitleStyle: {
+        color: colors.textDark,
+      },
+      headerStyle: {
+        backgroundColor: isDarkMode ? colors.background + '80' : 'rgba(255, 255, 255, 0.8)',
+        borderBottomWidth: 0,
+      },
+    });
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (!hasGenerated && tripData) {
@@ -81,7 +100,7 @@ export default function GenerateTrip() {
       style={{
         padding: 25,
         paddingTop: 75,
-        backgroundColor: '#ffffff',
+        backgroundColor: colors.background,
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -91,7 +110,7 @@ export default function GenerateTrip() {
         style={{
           fontFamily: 'outfit-bold',
           fontSize: 33,
-          color: '#1A1A1A',
+          color: colors.textDark,
           textAlign: 'center',
           marginBottom: 40,
         }}
@@ -105,7 +124,7 @@ export default function GenerateTrip() {
           width: '80%',
           height: 250,
           resizeMode: 'contain',
-          backgroundColor: '#ffffff',
+          backgroundColor: colors.background,
           alignSelf: 'center',
         }}
       />

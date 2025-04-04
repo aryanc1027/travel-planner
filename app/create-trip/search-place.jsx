@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Colors } from '../../constants/Colors';
+import { Colors, lightColors, darkColors } from '../../constants/Colors';
+import { useTheme } from '../../context/themeContext';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { CreateTripContext } from '../../context/createTripContext';
@@ -19,6 +20,8 @@ import { useRouter } from 'expo-router';
 
 export default function SearchPlace() {
   const navigation = useNavigation();
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,13 +35,14 @@ export default function SearchPlace() {
       headerTitle: 'Search',
       headerTitleStyle: {
         fontWeight: '600',
+        color: colors.textDark,
       },
       headerStyle: {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: isDarkMode ? colors.background + '80' : 'rgba(255, 255, 255, 0.8)',
         borderBottomWidth: 0,
       },
     });
-  }, []);
+  }, [isDarkMode]);
 
   // useEffect(() => {
   //   console.log('tripData', tripData);
@@ -106,18 +110,21 @@ export default function SearchPlace() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.searchContainer, { 
+        backgroundColor: isDarkMode ? colors.backgroundLight : '#f5f5f5',
+        shadowColor: colors.shadow,
+      }]}>
         <Ionicons
           name="search"
           size={20}
-          color="#999"
+          color={colors.textMuted}
           style={styles.searchIcon}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.textDark }]}
           placeholder="Search for a city"
-          placeholderTextColor="#999"
+          placeholderTextColor={colors.textMuted}
           value={query}
           onChangeText={text => {
             setQuery(text);
@@ -126,7 +133,7 @@ export default function SearchPlace() {
         />
         {query.length > 0 && (
           <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
-            <Ionicons name="close-circle" size={20} color="#999" />
+            <Ionicons name="close-circle" size={20} color={colors.textMuted} />
           </TouchableOpacity>
         )}
       </View>
@@ -135,7 +142,7 @@ export default function SearchPlace() {
         <ActivityIndicator
           style={styles.loader}
           size="large"
-          color={Colors.primary || '#0066CC'}
+          color={colors.primary}
         />
       ) : (
         <FlatList
@@ -143,18 +150,27 @@ export default function SearchPlace() {
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={styles.resultItem}
+              style={[
+                styles.resultItem, 
+                { 
+                  borderBottomWidth: 1,
+                  borderBottomColor: isDarkMode ? colors.primary + '30' : '#f0f0f0',
+                  backgroundColor: colors.background,
+                }
+              ]}
               onPress={() => handlePlaceSelect(item)}
             >
               <Ionicons
                 name="location"
                 size={20}
-                color="#666"
+                color={colors.primary}
                 style={styles.locationIcon}
               />
               <View style={styles.resultTextContainer}>
-                <Text style={styles.resultText}>{item.text}</Text>
-                <Text style={styles.resultSubtext}>
+                <Text style={[styles.resultText, { color: colors.textDark }]}>
+                  {item.text}
+                </Text>
+                <Text style={[styles.resultSubtext, { color: colors.textMuted }]}>
                   {item.place_name.replace(item.text + ', ', '')}
                 </Text>
               </View>
@@ -172,18 +188,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 100,
-    backgroundColor: Colors.white,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 20,
     marginBottom: 20,
-    backgroundColor: '#f5f5f5',
     borderRadius: 12,
     paddingHorizontal: 15,
     paddingVertical: 5,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 5,
@@ -196,7 +209,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
-    color: '#333',
   },
   clearButton: {
     padding: 5,
@@ -211,8 +223,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    paddingHorizontal: 15,
+    borderRadius: 12,
   },
   locationIcon: {
     marginRight: 15,
@@ -222,12 +234,11 @@ const styles = StyleSheet.create({
   },
   resultText: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    fontFamily: 'outfit-medium',
   },
   resultSubtext: {
     fontSize: 14,
-    color: '#888',
+    fontFamily: 'outfit',
     marginTop: 3,
   },
 });

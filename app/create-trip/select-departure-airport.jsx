@@ -1,13 +1,16 @@
 import { View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigation, useRouter } from 'expo-router';
-import { Colors } from '@/constants/Colors';
+import { Colors, lightColors, darkColors } from '@/constants/Colors';
 import { CreateTripContext } from '../../context/createTripContext';
+import { useTheme } from '../../context/themeContext';
 import { Alert } from 'react-native';
 
 export default function SelectDepartureAirport() {
   const navigation = useNavigation();
   const router = useRouter();
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
   const { tripData, setTripData } = useContext(CreateTripContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [airports, setAirports] = useState([]);
@@ -19,8 +22,15 @@ export default function SelectDepartureAirport() {
       headerShown: true,
       headerTitle: '',
       headerTransparent: true,
+      headerTitleStyle: {
+        color: colors.textDark,
+      },
+      headerStyle: {
+        backgroundColor: isDarkMode ? colors.background + '80' : 'rgba(255, 255, 255, 0.8)',
+        borderBottomWidth: 0,
+      },
     });
-  }, []);
+  }, [isDarkMode]);
 
   useEffect(() => {
     const searchAirports = async () => {
@@ -84,18 +94,24 @@ export default function SelectDepartureAirport() {
       onPress={() => setSelectedAirport(item)}
       style={{
         padding: 15,
-        backgroundColor: selectedAirport?.icao === item.icao ? Colors.primary : Colors.white,
+        backgroundColor: selectedAirport?.icao === item.icao 
+          ? colors.primary 
+          : colors.background,
         borderRadius: 10,
         marginVertical: 5,
         borderWidth: 1,
-        borderColor: selectedAirport?.icao === item.icao ? Colors.primary : Colors.lightGray,
+        borderColor: selectedAirport?.icao === item.icao 
+          ? colors.primary 
+          : isDarkMode ? colors.primary + '30' : colors.lightGrey,
       }}
     >
       <Text
         style={{
           fontFamily: 'outfit-medium',
           fontSize: 16,
-          color: selectedAirport?.icao === item.icao ? Colors.white : Colors.black,
+          color: selectedAirport?.icao === item.icao 
+            ? colors.white 
+            : colors.textDark,
         }}
       >
         {item.name} ({item.iata})
@@ -104,7 +120,9 @@ export default function SelectDepartureAirport() {
         style={{
           fontFamily: 'outfit-regular',
           fontSize: 14,
-          color: selectedAirport?.icao === item.icao ? Colors.white : Colors.gray,
+          color: selectedAirport?.icao === item.icao 
+            ? colors.white 
+            : colors.textMuted,
         }}
       >
         {item.city}, {item.country}
@@ -118,7 +136,7 @@ export default function SelectDepartureAirport() {
         flex: 1,
         paddingHorizontal: '5%',
         paddingTop: '12%',
-        backgroundColor: Colors.white,
+        backgroundColor: colors.background,
       }}
     >
       <View
@@ -132,7 +150,7 @@ export default function SelectDepartureAirport() {
           style={{
             fontFamily: 'outfit-bold',
             fontSize: Platform.OS === 'ios' ? 23 : 21,
-            color: Colors.black,
+            color: colors.textDark,
             marginBottom: '4%',
             marginTop: '10%',
             textAlign: 'center',
@@ -144,20 +162,23 @@ export default function SelectDepartureAirport() {
         <TextInput
           style={{
             borderWidth: 1,
-            borderColor: Colors.lightGray,
+            borderColor: isDarkMode ? colors.primary + '30' : colors.lightGrey,
             borderRadius: 10,
             padding: 15,
             marginBottom: 20,
             fontFamily: 'outfit-regular',
             fontSize: 16,
+            color: colors.textDark,
+            backgroundColor: isDarkMode ? colors.backgroundLight : colors.background,
           }}
           placeholder="Enter 3-letter (IATA) or 4-letter (ICAO) airport code..."
+          placeholderTextColor={colors.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
 
         {loading ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         ) : (
           <FlatList
             data={airports}
@@ -174,10 +195,10 @@ export default function SelectDepartureAirport() {
         onPress={handleContinue}
         style={{
           padding: '5%',
-          backgroundColor: Colors.primary,
+          backgroundColor: colors.primary,
           borderRadius: 20,
           marginHorizontal: '1%',
-          shadowColor: Colors.primary,
+          shadowColor: colors.primary,
           shadowOffset: {
             width: 0,
             height: 6,
@@ -191,7 +212,7 @@ export default function SelectDepartureAirport() {
         <Text
           style={{
             textAlign: 'center',
-            color: Colors.white,
+            color: colors.white,
             fontFamily: 'outfit-bold',
             fontSize: Platform.OS === 'ios' ? 20 : 18,
           }}

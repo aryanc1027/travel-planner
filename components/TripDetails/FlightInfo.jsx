@@ -5,9 +5,10 @@ import React from 'react'
 export default function FlightInfo({flightData}) {
     const cleanData = (str) => {
         if (!str) return ''; // Return empty string if value is undefined or null
-        return str.replace(/\s*\(Example\)/, '')  // Remove (Example)
-                 .replace(/\s*Example - Replace with actual booking site/, '') // Remove booking URL example text
-                 .replace(/\s*Example - check current flights/, '') // Remove flight check example text
+        return str.replace(/\s*\(Example\)/i, '')  // Remove (Example)
+                 .replace(/\s*Example - Replace with actual booking site/i, '') // Remove booking URL example text
+                 .replace(/\s*Example - check current flights/i, '') // Remove flight check example text
+                 .replace(/\s*example - confirm actual flight number/i, '')
                  .replace(/\s*\(\s*\)/, ''); // Remove empty parentheses
     }
     

@@ -1,30 +1,34 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useMemo } from 'react'
 import moment from 'moment'
-import { Colors } from '../../constants/Colors'
+import { Colors, lightColors, darkColors } from '../../constants/Colors'
 import UserTripCard from './UserTripCard'
 import { useRouter } from 'expo-router';
-export default function UserTripList({userTrips}) {
-    const LatestTrip = userTrips[0]?.tripPlan
+import { useTheme } from '../../context/themeContext';
+
+export default function UserTripList({trips}) {
+    const LatestTrip = trips[0]?.tripPlan
     const router = useRouter();
+    const { isDarkMode } = useTheme();
+    const colors = isDarkMode ? darkColors : lightColors;
 
     const imageUrl = useMemo(() => {
-      if (!userTrips[0]?.tripData) return null;
-      const logData = JSON.parse(userTrips[0].tripData);
+      if (!trips[0]?.tripData) return null;
+      const logData = JSON.parse(trips[0].tripData);
       return logData.locationInfo.imageUrl;
-    }, [userTrips[0]?.tripData]);
+    }, [trips[0]?.tripData]);
 
     const getStartDate = useMemo(() => {
-      if (!userTrips[0]?.tripData) return null;
-      const logData = JSON.parse(userTrips[0].tripData);
+      if (!trips[0]?.tripData) return null;
+      const logData = JSON.parse(trips[0].tripData);
       return logData.startDate;
-    }, [userTrips[0]?.tripData]);
+    }, [trips[0]?.tripData]);
 
-    return userTrips && (
+    return trips && trips.length > 0 ? (
       <View>
         <View style={{
           marginTop: 20,
-          shadowColor: '#000',
+          shadowColor: colors.shadow,
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.1,
           shadowRadius: 8,
@@ -47,7 +51,7 @@ export default function UserTripList({userTrips}) {
           <Text style={{
               fontFamily: 'outfit-medium',
               fontSize: 20,
-              color: '#1A1A1A',
+              color: colors.textDark,
               marginBottom: 4,
           }}>
               {LatestTrip.tripDetails?.location}
@@ -61,14 +65,14 @@ export default function UserTripList({userTrips}) {
             <Text style={{
                 fontFamily: 'outfit',
                 fontSize: 15,
-                color: Colors.grey,
+                color: colors.textMuted,
             }}>
                 {moment(getStartDate).format('DD MMMM YYYY')}
             </Text>
             <Text style={{
                 fontFamily: 'outfit',
                 fontSize: 17,
-                color: Colors.grey,
+                color: colors.textMuted,
             }}>
                 {(() => {
                   const travelers = LatestTrip.tripDetails?.travelers.toLowerCase();
@@ -84,31 +88,31 @@ export default function UserTripList({userTrips}) {
             onPress={() => router.push({
               pathname: '/trip-details',
               params: {
-                tripData: JSON.stringify(userTrips[0])
+                tripData: JSON.stringify(trips[0])
               }
             })}
             style={{
-              backgroundColor: Colors.primary,
+              backgroundColor: colors.primary,
               padding: 12,
               borderRadius: 12,
               marginTop: 12,
-              shadowColor: Colors.primary,
+              shadowColor: colors.primary,
               shadowOffset: { width: 0, height: 3 },
               shadowOpacity: 0.15,
               shadowRadius: 6,
               elevation: 3,
           }}>
-              <Text style={{
-                  color: 'white', 
-                  textAlign: 'center', 
-                  fontFamily: 'outfit-medium', 
-                  fontSize: 15
-              }}>
-                  See Details
-              </Text>
+            <Text style={{
+                fontFamily: 'outfit-medium',
+                color: colors.white,
+                textAlign: 'center',
+                fontSize: 16,
+            }}>
+                View Trip Details
+            </Text>
           </TouchableOpacity>
 
-          {userTrips.slice(1).reverse().map((trip, index) => (
+          {trips.slice(1).reverse().map((trip, index) => (
               <TouchableOpacity 
                 key={index}
                 onPress={() => router.push({
@@ -123,5 +127,5 @@ export default function UserTripList({userTrips}) {
           ))}
         </View>
       </View>
-    )
+    ) : null;
 }

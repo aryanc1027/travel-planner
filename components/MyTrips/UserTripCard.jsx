@@ -1,11 +1,14 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
 import moment from 'moment'
-import { Colors } from '../../constants/Colors'
+import { Colors, lightColors, darkColors } from '../../constants/Colors'
+import { useTheme } from '../../context/themeContext'
 
 export default function UserTripCard({trip}) {
    // Parse JSON once at component level
    const logData = JSON.parse(trip.tripData);
+   const { isDarkMode } = useTheme();
+   const colors = isDarkMode ? darkColors : lightColors;
    
    const getImageUrl = () => {
      return logData.locationInfo.imageUrl;
@@ -19,10 +22,10 @@ export default function UserTripCard({trip}) {
     <View style={{
         marginTop: 20,
         flexDirection: 'row',
-        backgroundColor: Colors.white,
+        backgroundColor: colors.background,
         padding: 12,
         borderRadius: 15,
-        shadowColor: '#000',
+        shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -46,7 +49,7 @@ export default function UserTripCard({trip}) {
         <Text style={{
             fontFamily: 'outfit-medium',
             fontSize: 18,
-            color: '#1A1A1A',
+            color: colors.textDark,
             marginBottom: 6,
         }}>
           {trip.tripPlan.tripDetails?.location}
@@ -55,7 +58,7 @@ export default function UserTripCard({trip}) {
         <Text style={{
             fontFamily: 'outfit',
             fontSize: 14,
-            color: Colors.grey,
+            color: colors.textMuted,
             marginBottom: 4,
         }}>
           {moment(getStartDate()).format('DD MMMM YYYY')}

@@ -1,17 +1,21 @@
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Switch, ScrollView, SafeAreaView } from 'react-native';
 import React from 'react';
-import { Colors } from '../../constants/Colors';
+import { Colors, lightColors, darkColors } from '../../constants/Colors';
 import { auth } from '../../configs/FirebaseConfig';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
 import { updateProfile, updateEmail, sendPasswordResetEmail } from 'firebase/auth';
+import { useTheme } from '../../context/themeContext';
 
 export default function Profile() {
   const router = useRouter();
   const user = auth.currentUser;
   const [fullName, setFullName] = React.useState(user?.displayName || '');
   const [email, setEmail] = React.useState(user?.email || '');
+  const { isDarkMode, toggleDarkMode, isSystemTheme, toggleSystemTheme } = useTheme();
+  
+  const colors = isDarkMode ? darkColors : lightColors;
 
   const handleUpdateProfile = async () => {
     try {
@@ -74,156 +78,227 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Profile</Text>
-      </View>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.textDark }]}>Profile</Text>
+        </View>
 
-      <View style={styles.profileSection}>
-        <View style={styles.avatarContainer}>
-          <Ionicons name="person-circle" size={80} color={Colors.primary} />
+        <View style={styles.profileSection}>
+          <View style={[styles.avatarContainer, { backgroundColor: colors.lightGrey + '20' }]}>
+            <Ionicons name="person-circle" size={100} color={colors.primary} />
+          </View>
+          
+          <Text style={[styles.userName, { color: colors.textDark }]}>{fullName || 'Your Name'}</Text>
+          <Text style={[styles.userEmail, { color: colors.textMuted }]}>{email || 'your.email@example.com'}</Text>
         </View>
         
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Full Name</Text>
-          <TextInput
-            style={styles.input}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Enter your full name"
-          />
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textDark }]}>Personal Information</Text>
           
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            placeholder="Enter your email"
-          />
-          
-          <TouchableOpacity 
-            style={styles.updateButton}
-            onPress={handleUpdateProfile}
-          >
-            <Text style={styles.updateButtonText}>Update Profile</Text>
-          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.label, { color: colors.textDark }]}>Full Name</Text>
+            <TextInput
+              style={[styles.input, { 
+                backgroundColor: colors.lightGrey + '20',
+                color: colors.textDark,
+                borderColor: colors.lightGrey + '40'
+              }]}
+              value={fullName}
+              onChangeText={setFullName}
+              placeholder="Enter your full name"
+              placeholderTextColor={colors.textMuted}
+            />
+            
+            <Text style={[styles.label, { color: colors.textDark }]}>Email</Text>
+            <TextInput
+              style={[styles.input, { 
+                backgroundColor: colors.lightGrey + '20',
+                color: colors.textDark,
+                borderColor: colors.lightGrey + '40'
+              }]}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Enter your email"
+              placeholderTextColor={colors.textMuted}
+            />
+            
+            <TouchableOpacity 
+              style={[styles.updateButton, { backgroundColor: colors.primary }]} 
+              onPress={handleUpdateProfile}
+            >
+              <Text style={styles.updateButtonText}>Update Profile</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textDark }]}>Security</Text>
           <TouchableOpacity 
-            style={styles.changePasswordButton}
+            style={[styles.securityButton, { backgroundColor: colors.lightGrey + '20' }]} 
             onPress={handleChangePassword}
           >
-            <Text style={styles.changePasswordText}>Change Password</Text>
+            <View style={styles.securityButtonContent}>
+              <Ionicons name="lock-closed-outline" size={24} color={colors.primary} />
+              <Text style={[styles.securityButtonText, { color: colors.textDark }]}>Change Password</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
-      </View>
+        
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textDark }]}>Appearance</Text>
+          <View style={[styles.themeOption, { borderColor: colors.lightGrey + '30' }]}>
+            <Text style={[styles.themeOptionText, { color: colors.textDark }]}>Use System Theme</Text>
+            <Switch
+              value={isSystemTheme}
+              onValueChange={toggleSystemTheme}
+              trackColor={{ false: colors.lightGrey, true: colors.primary }}
+              thumbColor={colors.white}
+            />
+          </View>
+          
+          {!isSystemTheme && (
+            <View style={[styles.themeOption, { borderColor: colors.lightGrey + '30' }]}>
+              <Text style={[styles.themeOptionText, { color: colors.textDark }]}>Dark Mode</Text>
+              <Switch
+                value={isDarkMode}
+                onValueChange={toggleDarkMode}
+                trackColor={{ false: colors.lightGrey, true: colors.primary }}
+                thumbColor={colors.white}
+              />
+            </View>
+          )}
+        </View>
 
-      <View style={styles.footer}>
         <TouchableOpacity 
-          style={styles.logoutButton}
+          style={[styles.logoutButton, { backgroundColor: colors.error }]} 
           onPress={handleLogout}
         >
-          <Ionicons name="log-out-outline" size={24} color={Colors.white} />
+          <Ionicons name="log-out-outline" size={20} color={colors.white} />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+
+        <View style={styles.bottomPadding} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
     padding: 20,
   },
   header: {
-    marginTop: 60,
+    marginTop: 20,
     marginBottom: 30,
   },
   title: {
     fontFamily: 'outfit-bold',
-    fontSize: 30,
-    color: Colors.black,
+    fontSize: 32,
   },
   profileSection: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 30,
   },
   avatarContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: Colors.lightGrey + '20',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
   },
+  userName: {
+    fontFamily: 'outfit-bold',
+    fontSize: 24,
+    marginBottom: 5,
+  },
+  userEmail: {
+    fontFamily: 'outfit',
+    fontSize: 16,
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontFamily: 'outfit-bold',
+    fontSize: 20,
+    marginBottom: 15,
+  },
   inputContainer: {
     width: '100%',
-    marginTop: 20,
   },
   label: {
     fontFamily: 'outfit-medium',
     fontSize: 16,
-    color: Colors.darkGrey,
-    marginBottom: 5,
+    marginBottom: 8,
   },
   input: {
-    backgroundColor: Colors.lightGrey + '20',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 15,
-    fontFamily: 'outfit-regular',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 20,
+    fontFamily: 'outfit',
     fontSize: 16,
+    borderWidth: 1,
   },
   updateButton: {
-    backgroundColor: Colors.primary,
     padding: 15,
-    borderRadius: 30,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
   },
   updateButtonText: {
     fontFamily: 'outfit-medium',
     color: Colors.white,
     fontSize: 16,
   },
-  changePasswordButton: {
-    padding: 15,
-    borderRadius: 30,
+  securityButton: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    padding: 15,
+    borderRadius: 12,
   },
-  changePasswordText: {
+  securityButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  securityButtonText: {
     fontFamily: 'outfit-medium',
-    color: Colors.primary,
     fontSize: 16,
+    marginLeft: 12,
   },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 20,
-    right: 20,
+  themeOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+  },
+  themeOptionText: {
+    fontFamily: 'outfit-medium',
+    fontSize: 16,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.black,
     padding: 15,
-    borderRadius: 30,
+    borderRadius: 12,
     marginTop: 20,
-    shadowColor: Colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
   logoutText: {
     fontFamily: 'outfit-medium',
     color: Colors.white,
     fontSize: 16,
     marginLeft: 10,
+  },
+  bottomPadding: {
+    height: 30,
   },
 });

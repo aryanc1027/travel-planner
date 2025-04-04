@@ -7,6 +7,7 @@ export default function FlightInfo({flightData}) {
         if (!str) return ''; // Return empty string if value is undefined or null
         return str.replace(/\s*\(Example\)/, '')  // Remove (Example)
                  .replace(/\s*Example - Replace with actual booking site/, '') // Remove booking URL example text
+                 .replace(/\s*Example - check current flights/, '') // Remove flight check example text
                  .replace(/\s*\(\s*\)/, ''); // Remove empty parentheses
     }
     
@@ -54,8 +55,8 @@ export default function FlightInfo({flightData}) {
                 </View>
                 {renderField('Airline', departure.airline)}
                 {renderField('Flight #', departure.flightNumber)}
-                {renderField('From', departure.origin)}
-                {renderField('To', departure.destination)}
+                {renderField('From', departure.destination)}
+                {renderField('To', departure.origin)}
             </View>
 
             {/* Arrival Information */}
@@ -68,8 +69,8 @@ export default function FlightInfo({flightData}) {
                 </View>
                 {renderField('Airline', arrival.airline)}
                 {renderField('Flight #', arrival.flightNumber)}
-                {renderField('From', arrival.origin)}
-                {renderField('To', arrival.destination)}
+                {renderField('From', arrival.destination)}
+                {renderField('To', arrival.origin)}
             </View>
         </View>
     )

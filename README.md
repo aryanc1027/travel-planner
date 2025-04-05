@@ -1,50 +1,108 @@
-# Welcome to your Expo app 👋
+# Travel Planner
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern React Native mobile application that helps users discover, plan, and organize their travel experiences. Built with Expo and React Native, this app provides a seamless travel planning experience with features like destination discovery, trip planning, and location-based recommendations.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Destination Discovery**
+  - Personalized travel recommendations based on travel style (Solo, Couple, Family, Group)
+  - Seasonal destination suggestions
+  - Budget-based filtering (Cost-effective, Mid-range, Luxury)
+  - Best time to visit information
+  - High-quality destination images and descriptions
 
-   ```bash
-   npm install
-   ```
+- **Trip Planning**
+  - Interactive calendar for trip scheduling
+  - Location search with Google Places integration
+  - Map integration with Mapbox
+  - Trip organization and management
 
-2. Start the app
+- **User Experience**
+  - Dark/Light mode support
+  - Modern, intuitive UI with smooth animations
+  - Responsive design
+  - Location-based services
 
-   ```bash
-    npx expo start
-   ```
+## Tech Stack
 
-In the output, you'll find options to open the app in a
+- **Frontend Framework**
+  - React Native
+  - Expo
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Key Libraries**
+  - Expo Router for navigation
+  - Firebase for backend services
+  - Mapbox for maps and location services
+  - Mapbox API for location search
+  - Unsplased API for image search
+  - API Ninjas API for Airport search
+  - Gemini API for trip creation
+  - React Native Reanimated for animations
 
-## Get a fresh project
+## Prerequisites
 
-When you're ready, run:
+- Node.js (v14 or higher)
+- npm or yarn
+- Expo CLI
+- iOS Simulator (for Mac users) or Android Studio (for Android development)
 
+## Installation
+
+1. Clone the repository
 ```bash
-npm run reset-project
+git clone [repository-url]
+cd travel_planner
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
 
-## Learn more
+3. Set up environment variables
+```bash
+cp .env.example .env
+# Fill in your API keys and configuration
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. Start the development server
+```bash
+npm start
+# or
+yarn start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Available Scripts
 
-## Join the community
+- `npm start` - Start the Expo development server
+- `npm run android` - Run on Android device/emulator
+- `npm run ios` - Run on iOS simulator
+- `npm run web` - Run in web browser
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+- `npm test` - Run tests
 
-Join our community of developers creating universal apps.
+## Project Structure
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+travel_planner/
+├── app/                 # Main application code
+├── assets/             # Static assets
+├── components/         # Reusable components
+├── constants/          # Constants and configuration
+├── context/           # React Context providers
+├── configs/           # Configuration files
+└── ...
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+

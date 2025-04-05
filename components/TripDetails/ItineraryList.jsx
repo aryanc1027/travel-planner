@@ -1,16 +1,22 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
-import Colors from '../../constants/Colors'
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function ItineraryList({itineraryData}) {
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
+
   // Helper function to render individual schedule items
   const renderScheduleItems = (schedule) => {
     return schedule.map((item, index) => (
-      <View key={index} style={styles.scheduleItem}>
-        <Text style={styles.scheduleTime}>{item.time}</Text>
-        <Text style={styles.scheduleActivity}>{item.activity}</Text>
+      <View key={index} style={[styles.scheduleItem, {
+        backgroundColor: isDarkMode ? colors.backgroundDark : colors.lightGrey + '20',
+      }]}>
+        <Text style={[styles.scheduleTime, { color: colors.textDark }]}>{item.time}</Text>
+        <Text style={[styles.scheduleActivity, { color: colors.textDark }]}>{item.activity}</Text>
         {item.location && (
-          <Text style={styles.scheduleLocation}>📍 {item.location}</Text>
+          <Text style={[styles.scheduleLocation, { color: colors.textMuted }]}>📍 {item.location}</Text>
         )}
       </View>
     ));
@@ -27,18 +33,29 @@ export default function ItineraryList({itineraryData}) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Daily Itinerary</Text>
+      <Text style={[styles.title, { color: colors.textDark }]}>Daily Itinerary</Text>
       
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.daysContainer}>
           {days.map((day, index) => (
-            <View key={index} style={styles.dayCard}>
-              <View style={styles.dayHeader}>
-                <Text style={styles.dayTitle}>
+            <View key={index} style={[styles.dayCard, {
+              backgroundColor: isDarkMode ? colors.backgroundLight : colors.white,
+              borderWidth: 1,
+              borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+              shadowColor: colors.shadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: isDarkMode ? 0.3 : 0.08,
+              shadowRadius: 4,
+              elevation: 3,
+            }]}>
+              <View style={[styles.dayHeader, {
+                borderBottomColor: isDarkMode ? colors.primary + '20' : colors.lightGrey,
+              }]}>
+                <Text style={[styles.dayTitle, { color: colors.textDark }]}>
                   {day.dayNumber.replace(/day(\d+)/i, 'Day $1').toUpperCase()}
                 </Text>
-                <Text style={styles.dayTheme}>{day.theme}</Text>
-                <Text style={styles.dayDate}>
+                <Text style={[styles.dayTheme, { color: colors.primary }]}>{day.theme}</Text>
+                <Text style={[styles.dayDate, { color: colors.textMuted }]}>
                   {new Date(day.date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -68,7 +85,6 @@ const styles = StyleSheet.create({
     fontFamily: 'outfit-bold',
     fontSize: 26,
     marginBottom: 15,
-    color: '#1A1A1A',
   },
   daysContainer: {
     flexDirection: 'row',
@@ -78,37 +94,30 @@ const styles = StyleSheet.create({
   },
   dayCard: {
     width: 300,
-    backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 20,
     maxHeight: 500,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 8,
   },
   dayHeader: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
     paddingBottom: 10,
     marginBottom: 10,
   },
   dayTitle: {
     fontFamily: 'outfit-bold',
     fontSize: 20,
-    color: '#1A1A1A',
   },
   dayTheme: {
     fontFamily: 'outfit-medium',
     fontSize: 16,
-    color: '#4B9CD3',
     marginTop: 4,
   },
   dayDate: {
     fontFamily: 'outfit',
     fontSize: 16,
-    color: '#666666',
     marginTop: 4,
   },
   scheduleContainer: {
@@ -117,24 +126,20 @@ const styles = StyleSheet.create({
   scheduleItem: {
     marginBottom: 15,
     padding: 15,
-    backgroundColor: '#F8F8F8',
     borderRadius: 12,
   },
   scheduleTime: {
     fontFamily: 'outfit-bold',
     fontSize: 16,
-    color: '#1A1A1A',
     marginBottom: 4,
   },
   scheduleActivity: {
     fontFamily: 'outfit-medium',
     fontSize: 16,
-    color: '#1A1A1A',
     marginBottom: 4,
   },
   scheduleLocation: {
     fontFamily: 'outfit',
     fontSize: 14,
-    color: '#666666',
   },
 });

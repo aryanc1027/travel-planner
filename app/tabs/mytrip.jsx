@@ -57,7 +57,7 @@ export default function MyTrip() {
           {userTrips.length === 1 ? 'My Trip' : 'My Trips'}
         </Text>
         <TouchableOpacity onPress={() => router.push('/create-trip/search-place')}>
-          <Ionicons name="add" size={24} color={colors.primary} />
+          <Ionicons name="add" size={32} color={colors.primary} />
         </TouchableOpacity>
       </View>
 

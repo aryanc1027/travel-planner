@@ -1,32 +1,47 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function HotelList({hotelData}) {
+  const { isDarkMode } = useTheme();
+  const colors = isDarkMode ? darkColors : lightColors;
+
   const renderAmenities = (amenities) => {
     return (
       <View style={styles.amenitiesContainer}>
         {amenities.map((amenity, index) => (
-          <Text key={index} style={styles.amenityItem}>• {amenity}</Text>
+          <Text key={index} style={[styles.amenityItem, { color: colors.textMuted }]}>• {amenity}</Text>
         ))}
       </View>
     );
   };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Hotel Options</Text>
+      <Text style={[styles.title, { color: colors.textDark }]}>Hotel Options</Text>
       
       {hotelData?.map((hotel, index) => (
-        <View key={index} style={styles.hotelSection}>
+        <View key={index} style={[styles.hotelSection, {
+          backgroundColor: isDarkMode ? colors.backgroundLight : colors.white,
+          borderWidth: 1,
+          borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: isDarkMode ? 0.3 : 0.08,
+          shadowRadius: 4,
+          elevation: 3,
+        }]}>
           <View style={styles.headerContainer}>
-            <Text style={styles.hotelName}>{hotel.hotelName}</Text>
-            <Text style={styles.price}>${hotel.price}/night</Text>
+            <Text style={[styles.hotelName, { color: colors.textDark }]}>{hotel.hotelName}</Text>
+            <Text style={[styles.price, { color: colors.success }]}>${hotel.price}/night</Text>
           </View>
 
-          <Text style={styles.rating}>Rating: {hotel.rating}⭐</Text>
-          <Text style={styles.address}>{hotel.hotelAddress}</Text>
-          <Text style={styles.description}>{hotel.description}</Text>
+          <Text style={[styles.rating, { color: colors.warning }]}>Rating: {hotel.rating}⭐</Text>
+          <Text style={[styles.address, { color: colors.textMuted }]}>{hotel.hotelAddress}</Text>
+          <Text style={[styles.description, { color: colors.textDark }]}>{hotel.description}</Text>
           
-          <Text style={styles.amenitiesTitle}>Amenities:</Text>
+          <Text style={[styles.amenitiesTitle, { color: colors.textDark }]}>Amenities:</Text>
           {renderAmenities(hotel.amenities)}
         </View>
       ))}
@@ -34,7 +49,7 @@ export default function HotelList({hotelData}) {
   )
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     marginVertical: 15,
     paddingHorizontal: 15,
@@ -43,16 +58,12 @@ const styles = {
     fontFamily: 'outfit-bold',
     fontSize: 22,
     marginBottom: 15,
-    color: '#2c3e50',
   },
   hotelSection: {
     marginBottom: 15,
     padding: 15,
-    backgroundColor: '#fff',
     borderRadius: 12,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -65,33 +76,27 @@ const styles = {
   hotelName: {
     fontFamily: 'outfit-bold',
     fontSize: 18,
-    color: '#34495e',
     flex: 1,
   },
   price: {
     fontSize: 16,
-    color: '#27ae60',
     fontFamily: 'outfit-bold',
   },
   rating: {
     fontSize: 15,
-    color: '#f39c12',
     marginBottom: 5,
   },
   address: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginBottom: 8,
   },
   description: {
     fontSize: 14,
-    color: '#2c3e50',
     marginBottom: 10,
   },
   amenitiesTitle: {
     fontFamily: 'outfit-bold',
     fontSize: 15,
-    color: '#34495e',
     marginBottom: 5,
   },
   amenitiesContainer: {
@@ -101,6 +106,5 @@ const styles = {
   },
   amenityItem: {
     fontSize: 13,
-    color: '#7f8c8d',
   },
-};
+});

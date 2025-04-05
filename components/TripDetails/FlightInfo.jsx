@@ -1,8 +1,12 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
-
+import { useTheme } from '../../context/themeContext';
+import { lightColors, darkColors } from '../../constants/Colors';
 
 export default function FlightInfo({flightData}) {
+    const { isDarkMode } = useTheme();
+    const colors = isDarkMode ? darkColors : lightColors;
+
     const cleanData = (str) => {
         if (!str) return ''; // Return empty string if value is undefined or null
         return str.replace(/\s*\(Example\)/i, '')  // Remove (Example)
@@ -36,22 +40,33 @@ export default function FlightInfo({flightData}) {
         if (!value) return null;
         return (
             <View style={styles.fieldContainer}>
-                <Text style={styles.label}>{label}:</Text>
-                <Text style={styles.value}>{value}</Text>
+                <Text style={[styles.label, { color: colors.textMuted }]}>{label}:</Text>
+                <Text style={[styles.value, { color: colors.textDark }]}>{value}</Text>
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Flight Details</Text>
+            <Text style={[styles.title, { color: colors.textDark }]}>Flight Details</Text>
 
             {/* Departure Information */}
-            <View style={styles.flightSection}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.sectionTitle}>Departure Flight</Text>
+            <View style={[styles.flightSection, { 
+                backgroundColor: isDarkMode ? colors.backgroundLight : colors.white,
+                borderWidth: 1,
+                borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isDarkMode ? 0.3 : 0.08,
+                shadowRadius: 4,
+                elevation: 3,
+            }]}>
+                <View style={[styles.headerContainer, { 
+                    borderBottomColor: isDarkMode ? colors.primary + '20' : colors.lightGrey 
+                }]}>
+                    <Text style={[styles.sectionTitle, { color: colors.textDark }]}>Departure Flight</Text>
                     {departure.flightPrice && (
-                        <Text style={styles.price}>${departure.flightPrice}</Text>
+                        <Text style={[styles.price, { color: colors.success }]}>${departure.flightPrice}</Text>
                     )}
                 </View>
                 {renderField('Airline', departure.airline)}
@@ -61,11 +76,22 @@ export default function FlightInfo({flightData}) {
             </View>
 
             {/* Arrival Information */}
-            <View style={styles.flightSection}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.sectionTitle}>Return Flight</Text>
+            <View style={[styles.flightSection, { 
+                backgroundColor: isDarkMode ? colors.backgroundLight : colors.white,
+                borderWidth: 1,
+                borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isDarkMode ? 0.3 : 0.08,
+                shadowRadius: 4,
+                elevation: 3,
+            }]}>
+                <View style={[styles.headerContainer, { 
+                    borderBottomColor: isDarkMode ? colors.primary + '20' : colors.lightGrey 
+                }]}>
+                    <Text style={[styles.sectionTitle, { color: colors.textDark }]}>Return Flight</Text>
                     {arrival.flightPrice && (
-                        <Text style={styles.price}>${arrival.flightPrice}</Text>
+                        <Text style={[styles.price, { color: colors.success }]}>${arrival.flightPrice}</Text>
                     )}
                 </View>
                 {renderField('Airline', arrival.airline)}
@@ -77,7 +103,7 @@ export default function FlightInfo({flightData}) {
     )
 }
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         marginVertical: 15,
         paddingHorizontal: 15,
@@ -86,16 +112,12 @@ const styles = {
         fontFamily: 'outfit-bold',
         fontSize: 22,
         marginBottom: 15,
-        color: '#2c3e50',
     },
     flightSection: {
         marginBottom: 15,
         padding: 15,
-        backgroundColor: '#fff',
         borderRadius: 12,
-        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
     },
@@ -106,12 +128,10 @@ const styles = {
         marginBottom: 12,
         paddingBottom: 8,
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
     },
     sectionTitle: {
         fontFamily: 'outfit-bold',
         fontSize: 18,
-        color: '#34495e',
     },
     fieldContainer: {
         flexDirection: 'row',
@@ -121,18 +141,15 @@ const styles = {
     label: {
         fontFamily: 'outfit-bold',
         fontSize: 15,
-        color: '#7f8c8d',
         marginRight: 8,
         width: 75,
     },
     value: {
         fontSize: 15,
-        color: '#2c3e50',
         flex: 1,
     },
     price: {
         fontSize: 16,
-        color: '#27ae60',
         fontFamily: 'outfit-bold',
     },
-};
+});

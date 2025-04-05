@@ -2,7 +2,8 @@ import { View, Text, Image, ScrollView, TouchableOpacity, Alert } from 'react-na
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Colors } from '../../constants/Colors';
+import { lightColors, darkColors } from '../../constants/Colors';
+import { useTheme } from '../../context/themeContext';
 import moment from 'moment';
 import FlightInfo from '../../components/TripDetails/FlightInfo';
 import HotelList from '../../components/TripDetails/HotelList';
@@ -16,6 +17,8 @@ export default function TripDetails() {
     const {tripData} = useLocalSearchParams();
     const [tripDetails, setTripDetails] = useState();
     const [tripId, setTripId] = useState(null);
+    const { isDarkMode } = useTheme();
+    const colors = isDarkMode ? darkColors : lightColors;
     
     // Parse JSON once at component level
     const parsedTripData = JSON.parse(tripData);
@@ -41,7 +44,7 @@ export default function TripDetails() {
         
         // Find the trip ID by querying Firestore
         findTripId();
-    }, []);
+    }, [isDarkMode]);
 
     const findTripId = async () => {
         try {
@@ -112,9 +115,15 @@ export default function TripDetails() {
     return tripDetails && (
         <ScrollView 
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 40 }}
+            contentContainerStyle={{ 
+                paddingBottom: 40,
+                flexGrow: 1,
+            }}
             scrollEventThrottle={16}
-            style={{ backgroundColor: 'white' }}
+            style={{ 
+                backgroundColor: isDarkMode ? colors.background : 'white',
+                flex: 1,
+            }}
             onScroll={({ nativeEvent }) => {
                 if (nativeEvent.contentOffset.y > 100) {
                     navigation.setOptions({ headerShown: false });
@@ -129,14 +138,24 @@ export default function TripDetails() {
             <Image source={{uri: imageUrl}} style={{width: '100%', height: 300}}/>
             <View style={{
                 padding: 15,
-                backgroundColor: Colors.white,
+                backgroundColor: isDarkMode ? colors.background : 'white',
                 marginTop: -30,
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
+                borderWidth: 1,
+                borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isDarkMode ? 0.3 : 0.08,
+                shadowRadius: 4,
+                elevation: 3,
+                flex: 1,
+                minHeight: '100%',
             }}>
                 <Text style={{
                     fontSize: 25,
                     fontFamily: 'outfit-bold',
+                    color: colors.textDark,
                 }}>{tripDetails?.tripPlan.tripDetails?.location}</Text>
                 <View style={{
                     display: 'flex',
@@ -148,14 +167,14 @@ export default function TripDetails() {
                     <Text style={{
                         fontFamily: 'outfit',
                         fontSize: 18,
-                        color: Colors.grey,
+                        color: colors.textMuted,
                     }}>
                         {moment(startDate).format('DD MMMM YYYY')}
                     </Text>
                     <Text style={{
                         fontFamily: 'outfit',
                         fontSize: 18,
-                        color: Colors.grey,
+                        color: colors.textMuted,
                     }}>
                         - {moment(endDate).format('DD MMMM YYYY')}
                     </Text>
@@ -163,7 +182,7 @@ export default function TripDetails() {
                 <Text style={{
                 fontFamily: 'outfit',
                 fontSize: 17,
-                color: Colors.grey,
+                color: colors.textMuted,
             }}>
                 {(() => {
                   const travelers = tripDetails?.tripPlan.tripDetails?.travelers.toLowerCase();
@@ -192,21 +211,23 @@ export default function TripDetails() {
                 <TouchableOpacity 
                     onPress={handleDeleteTrip}
                     style={{
-                        backgroundColor: 'red',
+                        backgroundColor: colors.error,
                         padding: 15,
-                        borderRadius: 12,
+                        borderRadius: 15,
                         marginTop: 10,
                         marginBottom: 10,
                         alignItems: 'center',
-                        shadowColor: 'red',
-                        shadowOffset: { width: 0, height: 3 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 6,
+                        shadowColor: colors.error,
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: isDarkMode ? 0.4 : 0.2,
+                        shadowRadius: 4,
                         elevation: 3,
+                        borderWidth: 1,
+                        borderColor: colors.error + '40',
                     }}
                 >
                     <Text style={{
-                        color: 'white',
+                        color: '#FFFFFF',
                         fontFamily: 'outfit-bold',
                         fontSize: 16,
                     }}>

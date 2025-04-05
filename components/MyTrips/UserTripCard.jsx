@@ -22,15 +22,15 @@ export default function UserTripCard({trip}) {
     <View style={{
         marginTop: 20,
         flexDirection: 'row',
-        backgroundColor: isDarkMode ? colors.backgroundLight : colors.background,
+        backgroundColor: isDarkMode ? colors.backgroundLight : 'white',
         padding: 12,
         borderRadius: 15,
-        borderWidth: isDarkMode ? 1 : 0,
-        borderColor: colors.lightGrey + '30',
+        borderWidth: 1,
+        borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
         shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: isDarkMode ? 0.3 : 0.08,
-        shadowRadius: 6,
+        shadowRadius: 4,
         elevation: 3,
     }}>
       <Image 

@@ -33,8 +33,7 @@ A modern React Native mobile application that helps users discover, plan, and or
 - **Key Libraries**
   - Expo Router for navigation
   - Firebase for backend services
-  - Mapbox for maps and location services
-  - Mapbox API for location search
+  - Mapbox API for location services
   - Unsplased API for image search
   - API Ninjas API for Airport search
   - Gemini API for trip creation
